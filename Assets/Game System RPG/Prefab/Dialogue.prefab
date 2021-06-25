@@ -303,7 +303,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonPrefab: {fileID: 4290511104984541439, guid: 83b7c59f9dad1a2479537e9f10847cf2, type: 3}
   dialogueButtonPanel: {fileID: 5544454418133233909}
-  responseText: {fileID: 0}
+  responseText: {fileID: 2903580383816423087}
 --- !u!1 &5544454416772740814
 GameObject:
   m_ObjectHideFlags: 0
