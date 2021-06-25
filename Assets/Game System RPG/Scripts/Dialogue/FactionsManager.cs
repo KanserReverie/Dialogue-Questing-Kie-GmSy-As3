@@ -34,11 +34,11 @@ public class Factions
 
 public class FactionsManager : MonoBehaviour
 {
+    static public bool AreFactionsDone = false;
     [SerializeField]
     Dictionary<string, Factions> factions;
     [SerializeField]
     List<Factions> initaliseFactions;
-
     // This is the only one.
     public static FactionsManager instance;
     // If there none make one.
@@ -79,10 +79,13 @@ public class FactionsManager : MonoBehaviour
 
     private void LateUpdate()
     {
+        float i = 0;
         foreach (Factions faction in initaliseFactions)
         {
             faction.factionTextDisplay.text = (faction.factionName + " Approval = " + faction.Approval);
+            i+=faction.Approval;
         }
+        AreFactionsDone = (i >= initaliseFactions.Count);
     }
 
     // Overload Funtion

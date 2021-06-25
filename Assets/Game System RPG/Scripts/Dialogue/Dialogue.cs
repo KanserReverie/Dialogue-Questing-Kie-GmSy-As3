@@ -18,5 +18,4 @@ public class Dialogue : MonoBehaviour
     {
         if (!firstDialogue) return;
     }
-
 }

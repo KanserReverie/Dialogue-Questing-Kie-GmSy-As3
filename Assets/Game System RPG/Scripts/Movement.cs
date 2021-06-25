@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Debugging.Player
 {
@@ -54,6 +55,10 @@ namespace Debugging.Player
             if (Input.GetKeyDown("l"))
             {
                 playerLevel++;
+            }
+            if (Input.GetKeyDown("r"))
+            {
+                Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
             }
         }
             private void Move()
