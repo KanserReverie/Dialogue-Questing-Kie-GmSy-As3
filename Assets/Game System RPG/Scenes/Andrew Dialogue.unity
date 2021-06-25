@@ -1050,7 +1050,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12c671e82b3cb494d81ca7c104e71b63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faction: 
+  faction: Apple Faction
   greeting: Sup son
   goodbye:
     question: CYA

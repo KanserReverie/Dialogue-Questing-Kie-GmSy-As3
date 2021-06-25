@@ -17,6 +17,7 @@ namespace Quests
     public abstract class Quest : MonoBehaviour
     {
         public string title;
+        public int levelToGetTo;
         [TextArea] public string desciption;
         public QuestReward reward;
 

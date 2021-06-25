@@ -11,6 +11,7 @@ TagManager:
   - Synty Tree
   - Synty Medium Farm
   - Synty Small Farm
+  - Quest
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Markers
   - Water
   - UI
-  - 
+  - Quest NPC
   - 
   - Character
   - PW_VFX

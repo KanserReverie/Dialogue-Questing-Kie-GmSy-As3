@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Factions
@@ -11,6 +12,8 @@ public class Factions
     [SerializeField, Range(-1,1)]
     private float _aproval;
 
+    public Text factionTextDisplay;
+    
     public float Approval
     {
         set
@@ -57,12 +60,13 @@ public class FactionsManager : MonoBehaviour
         foreach (Factions faction in initaliseFactions)
         {
             factions.Add(faction.factionName, faction);
+            faction.factionTextDisplay.text = (faction.factionName + " Approval = " + faction.Approval);
         }
     }
 
 
 
-        public float? FactionsApproval(string factionName, float value)
+    public float? FactionsApproval(string factionName, float value)
     {
         if (factions.ContainsKey(factionName))
         {
@@ -71,6 +75,14 @@ public class FactionsManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void LateUpdate()
+    {
+        foreach (Factions faction in initaliseFactions)
+        {
+            faction.factionTextDisplay.text = (faction.factionName + " Approval = " + faction.Approval);
+        }
     }
 
     // Overload Funtion

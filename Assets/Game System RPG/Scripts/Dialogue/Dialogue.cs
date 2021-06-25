@@ -17,10 +17,6 @@ public class Dialogue : MonoBehaviour
     private void Update()
     {
         if (!firstDialogue) return;
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            DialogueManager.instance.LoadDialogue(this);
-        }
     }
 
 }

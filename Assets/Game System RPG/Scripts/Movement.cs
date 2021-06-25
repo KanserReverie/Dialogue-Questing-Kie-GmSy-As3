@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace Debugging.Player
 {
@@ -6,6 +7,14 @@ namespace Debugging.Player
     [RequireComponent(typeof(CharacterController))]
     public class Movement : MonoBehaviour
     {
+        [Header("Player Details")]
+        public int playerLevel;
+        public Text playerLevelText;
+        public int playerMoney;
+        public Text playerMoneyText;
+        public int playerRocks;
+        public Text playerRocksText;
+
         [Header("Speed Vars")]
         public float moveSpeed;
         public float walkSpeed, runSpeed, crouchSpeed, jumpSpeed;
@@ -16,6 +25,9 @@ namespace Debugging.Player
         private Animator myAnimator;
         private void Start()
         {
+            playerLevel = 1;
+            playerMoney = 0;
+            playerRocks = 0;
             _charC = GetComponent<CharacterController>();
             myAnimator = GetComponentInChildren<Animator>();
         }
@@ -23,64 +35,28 @@ namespace Debugging.Player
         private void Update()
         {
             Move();
-            Interact();
+            playerLevelText.text = ("Player level = " + playerLevel);
+            playerMoneyText.text = ("Player money = " + playerMoney);
+            playerRocksText.text = ("Player rock count = " + playerRocks);
+            OtherFunctions();
         }
-
-        // Face to interact.
-        private void Interact()
+        private void 
+            OtherFunctions()
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown("q"))
             {
-                RaycastHit hit;
-                if (Physics.Raycast(transform.position, transform.forward, out hit, 3))
-                {
-                    //if (hit.transform.tag == "NPC")
-                    {
-                        Dialogue[] npcDialogue = hit.transform.GetComponents<Dialogue>();
-
-                        foreach (Dialogue dialogue in npcDialogue)
-                        {   
-                            if(dialogue.firstDialogue == true)
-                            {
-                                Cursor.lockState = CursorLockMode.Confined;
-                                Cursor.visible = true;
-
-                                DialogueManager.instance.LoadDialogue(dialogue);
-                            }
-
-                        }
-
-                    }
-                }
+                Time.timeScale = 1;
+                Application.Quit();
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            }
+            if (Input.GetKeyDown("l"))
+            {
+                playerLevel++;
             }
         }
-
-        //private void InteractCam()
-        //{
-         
-        //    if (Input.GetKeyDown(KeyCode.E))
-        //    {
-        //        Ray ray;
-
-        //        RaycastHit hitInfo;
-        //        ray = Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
-
-                
-        //        if (Physics.Raycast(ray, out hitInfo, out hit, 3))
-        //        {
-        //            if (hit.transform.tag == "NPC")
-        //            {
-        //                Dialogue npcDialogue = hit.transform.GetComponent<Dialogue>();
-        //                if (npcDialogue)
-        //                {
-        //                    print(npcDialogue.gameObject.name);
-        //                    DialogueManager.theManager.LoadDialogue(npcDialogue);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-        private void Move()
+            private void Move()
         {
             Vector2 movementInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
@@ -105,19 +81,6 @@ namespace Debugging.Player
                         myAnimator.SetFloat("speed", 1f);
                     }
                 }
-
-                //// If pushing stick > 5%. This is the long way.
-                //if (movementInput.magnitude > 0.05f)
-                //{
-                //    // Set walking animation.
-                //    myAnimator.SetBool("walking", true);
-                //}
-                //else
-                //{
-                //    myAnimator.SetBool("walking", false);
-                //}
-
-                // Everything above in 1 line
                 myAnimator.SetBool("walking", movementInput.magnitude > 0.05f);
 
                 _moveDir = transform.TransformDirection(new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")) * moveSpeed);

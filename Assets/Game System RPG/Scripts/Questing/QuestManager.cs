@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Debugging.Player;
 
 namespace Quests
 {
     public class QuestManager : MonoBehaviour
     {
         public static QuestManager instance = null;
+
+        public Text AvaliableQuests;
+
+        public Movement myPlayer;
 
         public List<Quest> quests = new List<Quest>();
 
@@ -15,10 +21,10 @@ namespace Quests
 
         public List<Quest> GetActiveQuests() => activeQuests;
 
+
         // Pass a player into this funtion.
         public void UpdateQuest(string _id)
         {
-
 
             // This is the same as checking if the key exists, if it does returning it.
             // TryGetValue returns a bool if it successfully got the item.
@@ -99,6 +105,24 @@ namespace Quests
                 else
                     Debug.LogError("THAT QUEST ALREADY EXISTS YOU DINGUS!");
             });
+        }
+
+        private void Update()
+        {
+            AvaliableQuests.text = "";
+            for (int i = 0; i < quests.Count; i++)
+            {
+                // Displays Each Score and Player name, then makes a new line in the HighScore text box.
+                AvaliableQuests.text = (AvaliableQuests.text + quests[i].title + " " + quests[i].stage.ToString() + "\n");
+
+                if (quests[i].stage == QuestStage.Locked)
+                    if (quests[i].requiredLevel <= myPlayer.playerLevel)
+                        quests[i].stage = QuestStage.Unlocked;
+                if (quests[i].stage == QuestStage.InProgress)
+                    if (quests[i].levelToGetTo <= myPlayer.playerLevel)
+                        quests[i].stage = QuestStage.RequirementMet;
+
+            }
         }
     }
 }

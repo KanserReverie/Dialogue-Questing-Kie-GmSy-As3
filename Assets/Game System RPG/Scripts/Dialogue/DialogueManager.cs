@@ -26,46 +26,53 @@ public class DialogueManager : MonoBehaviour
     }
     public void LoadDialogue(Dialogue _dialogue)
     {
-        transform.GetChild(0).gameObject.SetActive(true);
-        loadedDialogue = _dialogue;
-
-        ClearButtons();
-        int i = 0;
-        Button spawnedButton;
-
-
-        foreach (LineOfDialogue item in _dialogue.DialogueOptions)
+        if (_dialogue == null)
         {
-            float? currentApproval = FactionsManager.instance.FactionsApproval(_dialogue.faction);
-            if (currentApproval != null && currentApproval > item.minApproval)
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
+        else
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
+            loadedDialogue = _dialogue;
+
+            ClearButtons();
+            int i = 0;
+            Button spawnedButton;
+
+
+            foreach (LineOfDialogue item in _dialogue.DialogueOptions)
             {
-                spawnedButton = Instantiate(buttonPrefab, dialogueButtonPanel).GetComponent<Button>();
-                spawnedButton.GetComponentInChildren<Text>().text = item.question;
-
-                // i2 will be a differnt instance next loop.
-                // it will be "this" instance of i2 but if just i "ButtonPressed(i)" they will all reference the same thing.
-                int i2 = i;
-
-                // delegate is a variable that acts like a fuction, button the function can change depending on different factors.
-                spawnedButton.onClick.AddListener(delegate
+                float? currentApproval = FactionsManager.instance.FactionsApproval(_dialogue.faction);
+                if (currentApproval != null && currentApproval > item.minApproval)
                 {
-                    ButtonPressed(i2);
-                });
+                    spawnedButton = Instantiate(buttonPrefab, dialogueButtonPanel).GetComponent<Button>();
+                    spawnedButton.GetComponentInChildren<Text>().text = item.question;
+
+                    // i2 will be a differnt instance next loop.
+                    // it will be "this" instance of i2 but if just i "ButtonPressed(i)" they will all reference the same thing.
+                    int i2 = i;
+
+                    // delegate is a variable that acts like a fuction, button the function can change depending on different factors.
+                    spawnedButton.onClick.AddListener(delegate
+                    {
+                        ButtonPressed(i2);
+                    });
+                }
+
+                i++;
+
             }
 
-            i++;
+            Button spanwnedButton = Instantiate(buttonPrefab, dialogueButtonPanel).GetComponent<Button>();
+            spanwnedButton.GetComponentInChildren<Text>().text = _dialogue.goodbye.question;
 
+
+            // delegate is a variable that acts like a fuction, button the function can change depending on different factors.
+            spanwnedButton.onClick.AddListener(EndConversation);
+
+
+            DisplayResponse(_dialogue.greeting);
         }
-
-        Button spanwnedButton = Instantiate(buttonPrefab, dialogueButtonPanel).GetComponent<Button>();
-        spanwnedButton.GetComponentInChildren<Text>().text = _dialogue.goodbye.question;
-
-
-        // delegate is a variable that acts like a fuction, button the function can change depending on different factors.
-        spanwnedButton.onClick.AddListener(EndConversation);
-
-
-        DisplayResponse(_dialogue.greeting);
     }
 
     void EndConversation()
@@ -82,15 +89,17 @@ public class DialogueManager : MonoBehaviour
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }
+
     }
 
     void ButtonPressed(int _index)
     {
-        FactionsManager.instance.FactionsApproval(loadedDialogue.faction, loadedDialogue.DialogueOptions[_index].changeApproval);
+        FactionsManager.instance.FactionsApproval(loadedDialogue.faction,
+                loadedDialogue.DialogueOptions[_index].changeApproval);
 
-        if (loadedDialogue.DialogueOptions[_index] != null)
+
+        if (loadedDialogue.DialogueOptions[_index].nextDialogue != null)
         {
-            // Greetings is response.
             LoadDialogue(loadedDialogue.DialogueOptions[_index].nextDialogue);
         }
         else
